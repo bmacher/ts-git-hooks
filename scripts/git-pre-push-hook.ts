@@ -70,6 +70,7 @@ async function gitPrePushHook() {
     .length;
 
   if (filesWithError > 0) {
+    error(chalk.red('Failed...'));
     blankLine();
     error(chalk.red(`You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`));
     info('To see the errors run: npm run lint OR npx eslint');
