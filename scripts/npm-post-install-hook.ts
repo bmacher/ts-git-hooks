@@ -65,7 +65,7 @@ if (toBeInstalledHooks.length > 0) {
     } catch (err) {
       error(`${(<Error>err).message}\n`);
 
-      error(`Coundn't install ${hook}, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`);
+      error(`❌ Coundn't install ${hook}, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`);
       info('To execute run: npx ts-node scripts/npm-post-install-hook.ts');
 
       shell.exit(1);
