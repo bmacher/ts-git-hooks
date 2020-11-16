@@ -10,7 +10,7 @@ Git Hooks written in Nodejs to prevent pushing:
 Git Hooks are stored in and executed from *scripts/*. The hook scripts are named the following way: `git-<NAME>-hook.ts` and are written in TypeScript. They are executed with *ts-node*. When the projects depdencies are installed (`npm install` or `yarn (install)`) a [npm post install hook](./scripts/npm-post-install-hook.ts) is executed that scans for all git hooks. It then checks whether the hooks are installed and installs them if not. The installation is straight forward:
 
 1. Create hook file under *.git/hooks/\<name\>* 
-    - Content: npx ts-node \<path to repo\>/scripts/git-pre-commit-hook.ts
+    - Content: npx ts-node \<path to repo\>/scripts/git-pre-commit-hook.ts "$@"
 2. Make file executable (`chmod +x <file>`)
 
 ## Findings while creating that repo
