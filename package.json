@@ -6,6 +6,8 @@
   "scripts": {
     "postinstall": "ts-node scripts/npm-post-install-hook.ts",
     "start": "ts-node src/index.ts",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix",
     "test": "jest",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage"
