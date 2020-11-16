@@ -42,6 +42,15 @@ jest.run(['--silent'])
   .catch();
 ```
 
+### Shell
+
+Use `"$@"`if you want to propagate all arguments to sub command
+
+```sh
+#!/bin/bash
+ts-node <file> "$@"
+```
+
 ### Git
 
 Current branch name is stored in *.git/HEAD*.
