@@ -75,6 +75,8 @@ async function gitPrePushHook() {
 
     shell.exit(1);
   });
+
+  info('✅ All tests succeeded');
   // #endregion
 
   info();
