@@ -4,7 +4,10 @@
   "description": "Git Hooks written in Node to prevent pushing to master, commiting with ESLint errors or failing tests and messages that doesn't match the pattern.",
   "main": "src/index.ts",
   "scripts": {
+    "postinstall": "ts-node scripts/npm-post-install-hook.ts",
     "start": "ts-node src/index.ts",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix",
     "test": "jest",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage"
@@ -30,6 +33,8 @@
   "homepage": "https://github.com/bmacher/git-hooks-with-node#readme",
   "devDependencies": {
     "@jest/globals": "^26.6.2",
+    "@types/eslint": "^7.2.5",
+    "@types/shelljs": "^0.8.8",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "eslint": "^7.13.0",
@@ -39,6 +44,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.6.3",
     "prettier": "^2.1.2",
+    "shelljs": "^0.8.4",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
