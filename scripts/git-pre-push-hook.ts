@@ -26,8 +26,6 @@ async function gitPrePushHook() {
     .trim()
     .replace('ref: refs/heads/', '');
 
-  info(branch);
-
   if (branch === 'master') {
     error('❌ You are not allowed to push directly into master!');
     info('Please use Pull Requests to update master branch.\n');
