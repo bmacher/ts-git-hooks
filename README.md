@@ -44,7 +44,7 @@ jest.run(['--silent'])
 
 ### Shell
 
-Use `"$@"`if you want to propagate all arguments to sub command
+Use `"$@"` if you want to propagate all arguments to sub command
 
 ```sh
 #!/bin/bash
