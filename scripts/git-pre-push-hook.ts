@@ -17,10 +17,9 @@ import eslint from 'eslint';
 import * as jest from 'jest';
 
 const { info, error } = console;
+const blankLine = () => info();
 
 info(chalk.inverse('pre-push hook'));
-
-const blankLine = () => info();
 
 const rootPath = resolve(__dirname, '..');
 

@@ -12,10 +12,9 @@ import shell from 'shelljs';
 import chalk from 'chalk';
 
 const { info, error } = console;
+const blankLine = () => info();
 
 info(chalk.inverse('post-install hook'));
-
-const blankLine = () => info();
 
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);
