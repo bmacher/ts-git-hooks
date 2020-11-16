@@ -1,3 +1,8 @@
+/**
+ * Script checks for git hooks (files with prefix 'git-') and
+ * installs them when the aren't installed.
+ */
+
 import { resolve } from 'path';
 import shell from 'shelljs';
 
@@ -6,15 +11,16 @@ const { info, error } = console;
 const rootPath = resolve(__dirname, '..');
 const gitHooksPath = resolve(rootPath, '.git/hooks');
 
-shell.rm('-f', resolve(gitHooksPath, 'pre-commit'));
 shell.rm('-f', resolve(gitHooksPath, 'commit-msg'));
+shell.rm('-f', resolve(gitHooksPath, 'pre-commit'));
+shell.rm('-f', resolve(gitHooksPath, 'pre-push'));
 
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);
 
   const hookPath = `${path}/${name}`;
 
-  let { code } = shell.exec(`echo "npx ts-node scripts/git-${name}-hook.ts" > ${hookPath}`);
+  let { code } = shell.exec(`echo "npx ts-node $(git rev-parse --show-toplevel)/scripts/git-${name}-hook.ts" > ${hookPath}`);
 
   if (code !== 0) {
     throw new Error(`Error: Couldn't add ${name} hook`);
