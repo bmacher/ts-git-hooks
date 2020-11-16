@@ -27,6 +27,8 @@ const rootPath = resolve(__dirname, '..');
 async function gitPrePushHook() {
   // #region Prevent pushing to master
   info('Checking for current branch');
+
+  // Can not use 'git branch --show-current' as it prints to stout
   const gitHeadContent = readFileSync(resolve(rootPath, '.git/HEAD'));
 
   const branch = gitHeadContent
