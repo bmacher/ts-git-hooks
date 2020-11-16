@@ -17,16 +17,16 @@ function installHookOrThrow(path: string, name: string) {
   const hookPath = `${path}/${name}`;
   const hookScriptPath = resolve(__dirname, `git-${name}-hook.ts`);
 
-  let { code } = shell.exec(`echo "npx ts-node ${hookScriptPath}" > ${hookPath}`);
+  let { code } = shell.exec(`echo 'npx ts-node ${hookScriptPath} "$@"'> ${hookPath}`);
 
   if (code !== 0) {
-    throw new Error(`Error: Couldn't add ${name} hook`);
+    throw new Error(`Couldn't add ${name} hook`);
   }
 
   code = shell.exec(`chmod +x ${hookPath}`).code;
 
   if (code !== 0) {
-    throw new Error(`Error Couldn't make ${name} hook executable`);
+    throw new Error(`Couldn't make ${name} hook executable`);
   }
 }
 
@@ -60,7 +60,7 @@ if (toBeInstalledHooks.length > 0) {
     try {
       installHookOrThrow(gitHooksPath, hook);
     } catch (err) {
-      error(`${(<Error>err).message}\n`);
+      error(`Error: ${(<Error>err).message}\n`);
 
       error(`❌ Coundn't install ${hook}, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`);
       info('To execute run: npx ts-node scripts/npm-post-install-hook.ts');
