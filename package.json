@@ -1,0 +1,46 @@
+{
+  "name": "git-hooks-with-node",
+  "version": "0.1.0",
+  "description": "Git Hooks written in Node to prevent pushing to master, commiting with ESLint errors or failing tests and messages that doesn't match the pattern.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "jest",
+    "test:verbose": "jest --verbose",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmacher/git-hooks-with-node.git"
+  },
+  "keywords": [
+    "nodejs",
+    "git",
+    "hook",
+    "hooks",
+    "git-hooks",
+    "jest",
+    "eslint"
+  ],
+  "author": "Benjamin Macher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bmacher/git-hooks-with-node/issues"
+  },
+  "homepage": "https://github.com/bmacher/git-hooks-with-node#readme",
+  "devDependencies": {
+    "@jest/globals": "^26.6.2",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.6.3",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  }
+}
