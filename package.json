@@ -33,6 +33,7 @@
   "homepage": "https://github.com/bmacher/git-hooks-with-node#readme",
   "devDependencies": {
     "@jest/globals": "^26.6.2",
+    "@types/eslint": "^7.2.5",
     "@types/shelljs": "^0.8.8",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
