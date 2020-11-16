@@ -9,11 +9,13 @@
 
 import { resolve } from 'path';
 import shell from 'shelljs';
+import chalk from 'chalk';
 
 const { info, error } = console;
 
-const rootPath = resolve(__dirname, '..');
-const gitHooksPath = resolve(rootPath, '.git/hooks');
+info(chalk.inverse('post-install hook'));
+
+const blankLine = () => info();
 
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);
@@ -34,8 +36,8 @@ function installHookOrThrow(path: string, name: string) {
   }
 }
 
-info('===');
-info('POST INSTALL HOOK');
+const rootPath = resolve(__dirname, '..');
+const gitHooksPath = resolve(rootPath, '.git/hooks');
 
 // Get hooks that have a script
 const hooks = shell
@@ -57,21 +59,24 @@ for (const hook of hooks) {
   }
 }
 
-info('');
+blankLine();
 
 if (toBeInstalledHooks.length > 0) {
   for (const hook of toBeInstalledHooks) {
     try {
       installHookOrThrow(gitHooksPath, hook);
     } catch (err) {
-      error(`Error: ${(<Error>err).message}\n`);
+      error(chalk.red(`Error: ${(<Error>err).message}`));
+      blankLine();
 
-      error(`❌ Coundn't install ${hook}, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`);
+      error(chalk.red(`Coundn't install ${hook} hook, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`));
       info('To execute run: npx ts-node scripts/npm-post-install-hook.ts');
 
       shell.exit(1);
     }
   }
+
+  blankLine();
 }
 
-info('\n✅ Done!');
+info('✅ Done!');

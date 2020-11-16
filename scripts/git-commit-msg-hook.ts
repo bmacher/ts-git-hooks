@@ -8,8 +8,11 @@
 
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import chalk from 'chalk';
 
 const { info, error } = console;
+
+info(chalk.inverse('commit-msg hook'));
 
 const rootPath = resolve(__dirname, '..');
 
@@ -23,17 +26,18 @@ const msg = readFileSync(resolve(rootPath, msgPath))
   .toString()
   .trim();
 
-info('Checking commit message');
+info('Verifying commit message');
 
 if (!commitRE.test(msg)) {
   info();
 
-  let errorMsg = 'Error: invalid commit message format.\n\n';
+  let errorMsg = 'Error: Invalid commit message format.\n\n';
   errorMsg += '    A propper commit message would look like this:\n\n';
   errorMsg += '    feat(package-a): add a feature\n';
-  errorMsg += '    fix(package-b): error (close: #123)\n';
+  errorMsg += '    fix(package-b): error (close: #123)\n\n';
+  errorMsg += '    See commit-convention.md\n';
 
-  error(errorMsg);
+  error(chalk.red(errorMsg));
 
   process.exit(1);
 }

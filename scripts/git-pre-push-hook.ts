@@ -12,10 +12,15 @@
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import shell from 'shelljs';
+import chalk from 'chalk';
 import eslint from 'eslint';
 import * as jest from 'jest';
 
 const { info, error } = console;
+
+info(chalk.inverse('pre-push hook'));
+
+const blankLine = () => info();
 
 const rootPath = resolve(__dirname, '..');
 
@@ -31,57 +36,67 @@ async function gitPrePushHook() {
     .replace('ref: refs/heads/', '');
 
   if (branch === 'master') {
-    error('❌ You are not allowed to push directly into master!');
-    info('Please use Pull Requests to update master branch.\n');
+    blankLine();
+    error(chalk.red('You are not allowed to push directly into master!'));
+    info('Please use Pull Requests to update master branch.');
+    blankLine();
 
     shell.exit(1);
   }
 
   info('✅ Branch is not master');
+  blankLine();
   // #endregion
 
   // #region Prevent pushing with ESLint errors
-  info('\nLinting the code');
+  info('Linting the code');
   const linter = new eslint.ESLint({});
 
   const lintResult = await linter
     .lintFiles(rootPath)
-    // .then(() => { throw new Error('ff'); })
     .catch((err) => {
       error(err);
-      error('❌ Executing eslint failed. Make sure that it runs properly!');
-      info('To execute run: npm run lint OR npx eslint .');
+      blankLine();
+      error(chalk.red('Executing eslint failed. Make sure that it runs properly!'));
+      info('To execute run: npm run lint OR npx eslint');
+      blankLine();
 
       shell.exit(1);
     });
 
-  const filesWithError = lintResult.filter(({ errorCount }) => errorCount > 0).length;
+  const filesWithError = lintResult
+    .filter(({ errorCount }) => errorCount > 0)
+    .length;
 
   if (filesWithError > 0) {
-    error(`❌ You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`);
-    info('To see the error run: npm run lint OR npx eslint .');
+    blankLine();
+    error(chalk.red(`You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`));
+    info('To see the errors run: npm run lint OR npx eslint');
+    blankLine();
 
     shell.exit(1);
   }
 
   info('✅ ESLint succeeded');
+  blankLine();
   // #endregion
 
   // #region Prevent pushing with jest failing tests
-  info('\nRunning tests');
+  info('Running tests');
 
   await jest.run(['--silent']).catch((err) => {
     error(err);
-    error('❌ Executing jest failed. Make sure that it runs properly!');
+    blankLine();
+    error(chalk.red('Executing jest failed. Make sure that it runs properly!'));
     info('To execute run: npm run test OR npx jest');
+    blankLine();
 
     shell.exit(1);
   });
 
   info('✅ All tests succeeded');
+  blankLine();
   // #endregion
-
-  info();
 }
 
 gitPrePushHook();
