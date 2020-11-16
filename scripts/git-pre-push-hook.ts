@@ -1,8 +1,12 @@
 /**
- * Script is executed before 'git push' and prevents:
+ * @author Benjamin Macher
+ * @description Script is executed before 'git push' and prevents:
  *   - pushing to master branch
  *   - pushing with ESLint errors
  *   - pushing with failing jest tests
+ *
+ * @license MIT
+ * @copyright by Benjamin Macher 2020
  */
 
 import { resolve } from 'path';

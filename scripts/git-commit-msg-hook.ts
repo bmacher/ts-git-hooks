@@ -1,3 +1,11 @@
+/**
+ * @author Benjamin Macher
+ * @description Script verifies commit messages.
+ *
+ * @license MIT
+ * @copyright by Benjamin Macher 2020
+ */
+
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 

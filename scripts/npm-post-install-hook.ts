@@ -1,6 +1,10 @@
 /**
- * Script checks for git hooks (files with prefix 'git-') and
+ * @author Benjamin Macher
+ * @description Script checks for git hooks (files with prefix 'git-') and
  * installs them when they aren't installed.
+ *
+ * @license MIT
+ * @copyright by Benjamin Macher 2020
  */
 
 import { resolve } from 'path';
