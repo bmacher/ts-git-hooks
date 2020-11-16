@@ -1,6 +1,6 @@
 /**
  * Script checks for git hooks (files with prefix 'git-') and
- * installs them when the aren't installed.
+ * installs them when they aren't installed.
  */
 
 import { resolve } from 'path';
@@ -14,7 +14,7 @@ const gitHooksPath = resolve(rootPath, '.git/hooks');
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);
 
-  const hookPath = `${path}/${name}`;
+  const hookPath = resolve(path, name);
   const hookScriptPath = resolve(__dirname, `git-${name}-hook.ts`);
 
   let { code } = shell.exec(`echo 'npx ts-node ${hookScriptPath} "$@"'> ${hookPath}`);

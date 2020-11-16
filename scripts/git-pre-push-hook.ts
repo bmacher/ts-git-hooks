@@ -7,7 +7,7 @@
 
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-import shelljs from 'shelljs';
+import shell from 'shelljs';
 import eslint from 'eslint';
 import * as jest from 'jest';
 
@@ -15,7 +15,7 @@ const { info, error } = console;
 
 const rootPath = resolve(__dirname, '..');
 
-// Need to wrap whole hook into function to get async/await.
+// Need to wrap whole hook into function to get async/await
 async function gitPrePushHook() {
   // #region Prevent pushing to master
   info('Checking for current branch');
@@ -23,15 +23,16 @@ async function gitPrePushHook() {
 
   const branch = gitHeadContent
     .toString()
-    // Only take first line
-    .split('\n')[0]
+    .trim()
     .replace('ref: refs/heads/', '');
+
+  info(branch);
 
   if (branch === 'master') {
     error('❌ You are not allowed to push directly into master!');
     info('Please use Pull Requests to update master branch.\n');
 
-    shelljs.exit(1);
+    shell.exit(1);
   }
 
   info('✅ Branch is not master');
@@ -49,7 +50,7 @@ async function gitPrePushHook() {
       error('❌ Executing eslint failed. Make sure that it runs properly!');
       info('To execute run: npm run lint OR npx eslint .');
 
-      shelljs.exit(1);
+      shell.exit(1);
     });
 
   const filesWithError = lintResult.filter(({ errorCount }) => errorCount > 0).length;
@@ -58,7 +59,7 @@ async function gitPrePushHook() {
     error(`❌ You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`);
     info('To see the error run: npm run lint OR npx eslint .');
 
-    shelljs.exit(1);
+    shell.exit(1);
   }
 
   info('✅ ESLint succeeded');
@@ -72,11 +73,11 @@ async function gitPrePushHook() {
     error('❌ Executing jest failed. Make sure that it runs properly!');
     info('To execute run: npm run test OR npx jest');
 
-    shelljs.exit(1);
+    shell.exit(1);
   });
   // #endregion
 
-  info('');
+  info();
 }
 
 gitPrePushHook();
