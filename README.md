@@ -5,12 +5,41 @@ Git Hooks written in Nodejs to prevent pushing:
 - with ESLint errors 
 - with failing Jest tests
 
+## How to use it?
+
+1. Install the following development dependencies:
+
+```sh
+npm install --save-dev \
+  typescript \
+  ts-node \
+  shelljs \
+  @types/shelljs \
+  eslint \
+  @types/eslint \
+  jest \
+  chalk
+```
+
+2. Save [npm-post-install-hook.ts](./scripts/npm-post-install-hook.ts) under *scripts/* and add npm post-install hook to *package.json* that executes the script.
+
+```json
+"scripts": {
+  "postinstall": "ts-node scripts/npm-post-install-hook.ts",
+},
+```
+
+3. Add whatever Git Hook you want to apply under *scripts/*.
+
+4. Run `npm install` to install the git hooks.
+
+
 ## How does it work?
 
 Git Hooks are stored in and executed from *scripts/*. The hook scripts are named the following way: `git-<NAME>-hook.ts` and are written in TypeScript. They are executed with *ts-node*. When the projects depdencies are installed (`npm install` or `yarn (install)`) a [npm post install hook](./scripts/npm-post-install-hook.ts) is executed that scans for all git hooks. It then checks whether the hooks are installed and installs them if not. The installation is straight forward:
 
 1. Create hook file under *.git/hooks/\<name\>* 
-    - Content: npx ts-node \<path to repo\>/scripts/git-pre-commit-hook.ts
+    - Content: npx ts-node \<path to repo\>/scripts/git-pre-commit-hook.ts "$@"
 2. Make file executable (`chmod +x <file>`)
 
 ## Findings while creating that repo
@@ -40,6 +69,15 @@ import * as jest from 'jest';
 jest.run(['--silent'])
   .then()
   .catch();
+```
+
+### Shell
+
+Use `"$@"` if you want to propagate all arguments to sub command
+
+```sh
+#!/bin/bash
+ts-node <file> "$@"
 ```
 
 ### Git

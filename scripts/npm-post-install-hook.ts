@@ -1,37 +1,42 @@
 /**
- * Script checks for git hooks (files with prefix 'git-') and
- * installs them when the aren't installed.
+ * @author Benjamin Macher
+ * @description Script checks for git hooks (files with prefix 'git-') and
+ * installs them when they aren't installed.
+ *
+ * @license MIT
+ * @copyright by Benjamin Macher 2020
  */
 
 import { resolve } from 'path';
 import shell from 'shelljs';
+import chalk from 'chalk';
 
 const { info, error } = console;
+const blankLine = () => info();
 
-const rootPath = resolve(__dirname, '..');
-const gitHooksPath = resolve(rootPath, '.git/hooks');
+info(chalk.inverse('post-install hook'));
 
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);
 
-  const hookPath = `${path}/${name}`;
+  const hookPath = resolve(path, name);
   const hookScriptPath = resolve(__dirname, `git-${name}-hook.ts`);
 
-  let { code } = shell.exec(`echo "npx ts-node ${hookScriptPath}" > ${hookPath}`);
+  let { code } = shell.exec(`echo 'npx ts-node ${hookScriptPath} "$@"'> ${hookPath}`);
 
   if (code !== 0) {
-    throw new Error(`Error: Couldn't add ${name} hook`);
+    throw new Error(`Couldn't add ${name} hook`);
   }
 
   code = shell.exec(`chmod +x ${hookPath}`).code;
 
   if (code !== 0) {
-    throw new Error(`Error Couldn't make ${name} hook executable`);
+    throw new Error(`Couldn't make ${name} hook executable`);
   }
 }
 
-info('===');
-info('POST INSTALL HOOK');
+const rootPath = resolve(__dirname, '..');
+const gitHooksPath = resolve(rootPath, '.git/hooks');
 
 // Get hooks that have a script
 const hooks = shell
@@ -53,21 +58,24 @@ for (const hook of hooks) {
   }
 }
 
-info('');
+blankLine();
 
 if (toBeInstalledHooks.length > 0) {
   for (const hook of toBeInstalledHooks) {
     try {
       installHookOrThrow(gitHooksPath, hook);
     } catch (err) {
-      error(`${(<Error>err).message}\n`);
+      error(chalk.red(`Error: ${(<Error>err).message}`));
+      blankLine();
 
-      error(`❌ Coundn't install ${hook}, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`);
+      error(chalk.red(`Coundn't install ${hook} hook, please run scripts/npm-post-install-hook.ts manually and make sure that it runs through.`));
       info('To execute run: npx ts-node scripts/npm-post-install-hook.ts');
 
       shell.exit(1);
     }
   }
+
+  blankLine();
 }
 
-info('\n✅ Done!');
+info('✅ Done!');
