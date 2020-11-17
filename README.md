@@ -1,9 +1,30 @@
-# Git Hooks with Nodejs
+# Git Hooks written in TypeScript
 
-Git Hooks written in Nodejs to prevent pushing:
-- to master
-- with ESLint errors 
-- with failing Jest tests
+- [Git Hooks](#git-hooks)
+- [NPM Hooks](#npm-hooks)
+- [How to use it?](#how-to-use-it)
+- [How does it work?](#how-does-it-work)
+- [Findings while creating that repo](#findings-while-creating-that-repo)
+
+## Git Hooks
+
+#### commit-msg
+
+This hook verifies the commit messages and prevents commiting if they doesm't match the the pattern from [Commit Convention](./commit-convention.md)
+
+#### pre-push
+
+First of all this hook checks the current branch and stops pushing to origin when the branch is *master*. It also checks for the commit message and runs *ESLint* and *Jest* if it isn't a work in progress commit (prefix `wip`). Hence it forces a good overall code quality.
+
+## NPM Hooks
+
+### preinstall
+
+Checks which tool is used to install depencenies and stops the process when it isn't *yarn*.
+
+### postinstall
+
+Installs all git hooks from scripts. For more informations see [How to use it?](#how-to-use-it).
 
 ## How to use it?
 
