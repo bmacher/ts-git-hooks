@@ -28,7 +28,7 @@ async function gitPrePushHook() {
   // #region Prevent pushing to master
   info('Checking for current branch');
 
-  // Can not use 'git branch --show-current' as it prints to stout
+  // Can not use 'git branch --show-current' as it prints to stdout
   const gitHeadContent = readFileSync(resolve(rootPath, '.git/HEAD'));
 
   const branch = gitHeadContent
@@ -48,6 +48,21 @@ async function gitPrePushHook() {
   info('✅ Branch is not master');
   blankLine();
   // #endregion
+
+  // Only run ESLint and Jest when last commit is none wip
+  info('Last commit message:');
+  const msgOfLastCommit = shell
+    .exec('git log -1  --pretty=%s')
+    .toString()
+    .trim();
+
+  const wipCommitRE = /^(revert: )?wip/;
+
+  if (!wipCommitRE.test(msgOfLastCommit)) {
+    info('None WIP');
+  }
+
+  process.exit(1);
 
   // #region Prevent pushing with ESLint errors
   info('Linting the code');
@@ -98,7 +113,12 @@ async function gitPrePushHook() {
 
   info('✅ All tests succeeded');
   blankLine();
-  // #endregion
+  // #endregionq
 }
 
-gitPrePushHook();
+gitPrePushHook()
+  // Exit if unkown error occurs
+  .catch((err) => {
+    error(err);
+    shell.exit(1);
+  });
