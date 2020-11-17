@@ -14,7 +14,8 @@ import chalk from 'chalk';
 const { info, error } = console;
 const blankLine = () => info();
 
-info(chalk.inverse('post-install hook'));
+blankLine();
+info('>> post-install hook');
 
 function installHookOrThrow(path: string, name: string) {
   info(`Installing: ${name}`);

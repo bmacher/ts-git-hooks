@@ -19,7 +19,8 @@ import * as jest from 'jest';
 const { info, error } = console;
 const blankLine = () => info();
 
-info(chalk.inverse('pre-push hook'));
+blankLine();
+info('>> pre-push hook');
 
 const rootPath = resolve(__dirname, '..');
 
@@ -28,9 +29,8 @@ async function gitPrePushHook() {
   // #region Prevent pushing to master
   info('Checking for current branch');
 
-  // Can not use 'git branch --show-current' as it prints to stout
+  // Can not use 'git branch --show-current' as it prints to stdout
   const gitHeadContent = readFileSync(resolve(rootPath, '.git/HEAD'));
-
   const branch = gitHeadContent
     .toString()
     .trim()
@@ -49,56 +49,80 @@ async function gitPrePushHook() {
   blankLine();
   // #endregion
 
-  // #region Prevent pushing with ESLint errors
-  info('Linting the code');
-  const linter = new eslint.ESLint({});
+  // Only run ESLint and Jest when last commit is none wip
+  const wipCommitRE = /^(revert: )?wip/;
 
-  const lintResult = await linter
-    .lintFiles(rootPath)
-    .catch((err) => {
+  info('Last commit message:');
+  const msgOfLastCommit = shell
+    .exec('git log -1  --pretty=%s')
+    .toString()
+    .trim();
+  blankLine();
+
+  if (!wipCommitRE.test(msgOfLastCommit)) {
+    // #region Prevent pushing with ESLint errors
+    info('Linting the code');
+    const linter = new eslint.ESLint({});
+
+    const lintResult = await linter
+      .lintFiles(rootPath)
+      .catch((err) => {
+        error(err);
+        blankLine();
+        error(chalk.red('Executing eslint failed. Make sure that it runs properly!'));
+        info('To execute run: npm run lint OR npx eslint');
+        blankLine();
+
+        shell.exit(1);
+      });
+
+    const filesWithError = lintResult
+      .filter(({ errorCount }) => errorCount > 0)
+      .length;
+
+    if (filesWithError > 0) {
+      error(chalk.red('Failed...'));
+      blankLine();
+      error(chalk.red(`You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`));
+      info('To see the errors run: npm run lint OR npx eslint');
+      blankLine();
+
+      shell.exit(1);
+    }
+
+    info('✅ ESLint succeeded');
+    blankLine();
+    // #endregion
+
+    // #region Prevent pushing with jest failing tests
+    info('Running tests');
+    await jest.run(['--silent']).catch((err) => {
       error(err);
       blankLine();
-      error(chalk.red('Executing eslint failed. Make sure that it runs properly!'));
-      info('To execute run: npm run lint OR npx eslint');
+      error(chalk.red('Executing jest failed. Make sure that it runs properly!'));
+      info('To execute run: npm run test OR npx jest');
       blankLine();
 
       shell.exit(1);
     });
 
-  const filesWithError = lintResult
-    .filter(({ errorCount }) => errorCount > 0)
-    .length;
-
-  if (filesWithError > 0) {
-    error(chalk.red('Failed...'));
+    info('✅ All tests succeeded');
     blankLine();
-    error(chalk.red(`You are not allowed to push with ${filesWithError} file${filesWithError > 1 ? 's' : ''} having ESLint errors!`));
-    info('To see the errors run: npm run lint OR npx eslint');
-    blankLine();
+    // #endregion
+  } else {
+    // We got work in progress commit
+    let warnMsg = 'Warning! You are pushing a work in progress commit!\n';
+    warnMsg += 'Neither ESLint nor Jest are executed and therefore\n';
+    warnMsg += 'the current codebase may be corrupted.';
 
-    shell.exit(1);
+    console.warn(chalk.keyword('orange')(warnMsg));
+    blankLine();
   }
-
-  info('✅ ESLint succeeded');
-  blankLine();
-  // #endregion
-
-  // #region Prevent pushing with jest failing tests
-  info('Running tests');
-
-  await jest.run(['--silent']).catch((err) => {
-    error(err);
-    blankLine();
-    error(chalk.red('Executing jest failed. Make sure that it runs properly!'));
-    info('To execute run: npm run test OR npx jest');
-    blankLine();
-
-    shell.exit(1);
-  });
-
-  info('✅ All tests succeeded');
-  blankLine();
-  // #endregion
 }
 
-gitPrePushHook();
+gitPrePushHook()
+  // Exit if unkown error occurs
+  .catch((err) => {
+    error(err);
+    shell.exit(1);
+  });

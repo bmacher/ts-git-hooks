@@ -11,17 +11,17 @@ import { resolve } from 'path';
 import chalk from 'chalk';
 
 const { info, error } = console;
+const blankLine = () => info();
 
-info(chalk.inverse('commit-msg hook'));
+blankLine();
+info('>> commit-msg hook');
 
 const rootPath = resolve(__dirname, '..');
-
 const maxMsgLength = 50;
 const commitRE = new RegExp(`^(revert: )?(feat|fix|docs|refactor|test|chore|wip|style|tooling)(\\(.+\\))?: .{1,${maxMsgLength}}`);
 
 // First two arguments are path to ts-node and path to script
 const [,,msgPath] = process.argv;
-
 const msg = readFileSync(resolve(rootPath, msgPath))
   .toString()
   .trim();
@@ -29,17 +29,17 @@ const msg = readFileSync(resolve(rootPath, msgPath))
 info('Verifying commit message');
 
 if (!commitRE.test(msg)) {
-  info();
-
   let errorMsg = 'Error: Invalid commit message format.\n\n';
-  errorMsg += '    A propper commit message would look like this:\n\n';
+  errorMsg += '    A proper commit message would look like this:\n\n';
   errorMsg += '    feat(package-a): add a feature\n';
   errorMsg += '    fix(package-b): error (close: #123)\n\n';
-  errorMsg += '    See commit-convention.md\n';
+  errorMsg += `    For further information see ${chalk.underline('commit-convention.md')}.\n`;
 
+  blankLine();
   error(chalk.red(errorMsg));
 
   process.exit(1);
 }
 
-info('✅ Correct message format');
+info('✅ Valid message format');
+blankLine();
