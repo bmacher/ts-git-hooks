@@ -1,9 +1,10 @@
 {
   "name": "git-hooks-with-node",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Git Hooks written in Node to prevent pushing to master, commiting with ESLint errors or failing tests and messages that doesn't match the pattern.",
   "main": "src/index.ts",
   "scripts": {
+    "preinstall": "ts-node scripts/npm-pre-install-hook.ts",
     "postinstall": "ts-node scripts/npm-post-install-hook.ts",
     "start": "ts-node src/index.ts",
     "lint": "eslint ./",
