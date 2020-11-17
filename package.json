@@ -4,6 +4,7 @@
   "description": "Git Hooks written in Node to prevent pushing to master, commiting with ESLint errors or failing tests and messages that doesn't match the pattern.",
   "main": "src/index.ts",
   "scripts": {
+    "preinstall": "ts-node scripts/npm-pre-install-hook.ts",
     "postinstall": "ts-node scripts/npm-post-install-hook.ts",
     "start": "ts-node src/index.ts",
     "lint": "eslint ./",
