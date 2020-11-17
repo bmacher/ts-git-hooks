@@ -118,8 +118,6 @@ async function gitPrePushHook() {
     console.warn(chalk.keyword('orange')(warnMsg));
     blankLine();
   }
-
-  shell.exit(1);
 }
 
 gitPrePushHook()
