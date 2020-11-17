@@ -1,4 +1,4 @@
-# Git Hooks written in TypeScrip
+# Git Hooks written in TypeScript
 
 - [Git Hooks](#git-hooks)
 - [NPM Hooks](#npm-hooks)
