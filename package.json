@@ -1,6 +1,6 @@
 {
   "name": "git-hooks-with-node",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Git Hooks written in Node to prevent pushing to master, commiting with ESLint errors or failing tests and messages that doesn't match the pattern.",
   "main": "src/index.ts",
   "scripts": {
