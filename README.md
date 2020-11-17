@@ -8,21 +8,21 @@
 
 ## Git Hooks
 
-### commit-msg
+#### commit-msg
 
 This hook verifies the commit messages and prevents commiting if they doesm't match the the pattern from [Commit Convention](./commit-convention.md)
 
-### pre-push
+#### pre-push
 
 First of all this hook checks the current branch and stops pushing to origin when the branch is *master*. It also checks for the commit message and runs *ESLint* and *Jest* if it isn't a work in progress commit (prefix `wip`). Hence it forces a good overall code quality.
 
 ## NPM Hooks
 
-## preinstall
+### preinstall
 
 Checks which tool is used to install depencenies and stops the process when it isn't *yarn*.
 
-## postinstall
+### postinstall
 
 Installs all git hooks from scripts. For more informations see [How to use it?](#how-to-use-it).
 
