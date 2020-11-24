@@ -29,11 +29,11 @@ const msg = readFileSync(resolve(rootPath, msgPath))
 info('Verifying commit message');
 
 if (!commitRE.test(msg)) {
-  let errorMsg = 'Error: Invalid commit message format.\n\n';
-  errorMsg += '    A proper commit message would look like this:\n\n';
-  errorMsg += '    feat(package-a): add a feature\n';
-  errorMsg += '    fix(package-b): error (close: #123)\n\n';
-  errorMsg += `    For further information see ${chalk.underline('commit-convention.md')}.\n`;
+  const errorMsg = 'Error: Invalid commit message format.\n\n'
+    + '    A proper commit message would look like this:\n\n'
+    + '    feat(package-a): add a feature\n'
+    + '    fix(package-b): error (close: #123)\n\n'
+    + `    For further information see ${chalk.underline('commit-convention.md')}.\n`;
 
   blankLine();
   error(chalk.red(errorMsg));

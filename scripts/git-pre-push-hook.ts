@@ -111,9 +111,9 @@ async function gitPrePushHook() {
     // #endregion
   } else {
     // We got work in progress commit
-    let warnMsg = 'Warning! You are pushing a work in progress commit!\n';
-    warnMsg += 'Neither ESLint nor Jest are executed and therefore\n';
-    warnMsg += 'the current codebase may be corrupted.';
+    const warnMsg = 'Warning! You are pushing a work in progress commit!\n'
+      + 'Neither ESLint nor Jest are executed and therefore\n'
+      + 'the current codebase may be corrupted.';
 
     console.warn(chalk.keyword('orange')(warnMsg));
     blankLine();

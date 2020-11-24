@@ -15,8 +15,8 @@ const execPath = process.env.npm_execpath;
 
 if (!execPath || !execPath.includes('yarn')) {
   blankLine();
-  let errorMsg = 'This repository uses yarn as its package manager!\n';
-  errorMsg += 'To install dependencies run: yarn OR yarn install';
+  const errorMsg = 'This repository uses yarn as its package manager!\n'
+    + 'To install dependencies run: yarn OR yarn install';
 
   error(chalk.red(errorMsg));
   blankLine();
