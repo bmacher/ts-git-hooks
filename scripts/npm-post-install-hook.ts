@@ -42,7 +42,8 @@ const gitHooksPath = resolve(rootPath, '.git/hooks');
 // Get hooks that have a script
 const hooks = shell
   .ls(resolve(rootPath, 'scripts'))
-  .filter((entry) => entry.slice(0, 4) === 'git-')
+  // Prevent '.d.ts' to be treated as hooks
+  .filter((filename) => /^git-[\w-.]+(?<!\.d)\.ts$/.test(filename))
   // Extract hook name -> git-<name>-hook.ts
   .map((hook) => hook.slice(4, -8));
 
